@@ -319,7 +319,7 @@ export const CERTIFICATIONS = [
 ];
 
 export const CODING_PROFILES = [
-  { name: "LeetCode", value: "500+", label: "problems solved", href: PROFILE.leetcode },
+  { name: "LeetCode", value: "400+", label: "problems solved", href: PROFILE.leetcode },
   { name: "CodeChef", value: "Active", label: "competitive profile", href: PROFILE.codechef },
   { name: "GitHub", value: "40+", label: "public repos", href: PROFILE.github },
   { name: "LinkedIn", value: "Connect", label: "professional network", href: PROFILE.linkedin },
