@@ -169,7 +169,7 @@ export const PROJECTS: Project[] = [
   {
     name: "Personal Financial Manager",
     tagline: "Full-stack finance tracker for income and expenses",
-    stack: ["React.js", "Node.js", "Express.js", "MongoDB"],
+    stack: ["React.js", "Node.js", "Express.js", "PostgreSQL", "JWT"],
     problem: "Users needed a simple way to track income, expenses, and budgets.",
     solution: "Built a secure finance app with budget tracking, categorization, dashboards, and reports.",
     features: [
