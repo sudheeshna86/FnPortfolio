@@ -493,8 +493,8 @@ function Experience() {
           </div>
           <div className="rounded-3xl glass-strong p-8">
             <div className="flex items-center gap-3">
-              <div className="grid h-12 w-12 place-items-center rounded-2xl bg-gradient-to-br from-accent to-[oklch(0.78_0.18_180)]">
-                <GraduationCap className="h-6 w-6 text-primary-foreground" />
+              <div className="grid h-12 w-12 place-items-center rounded-2xl bg-gradient-to-br from-primary to-accent">
+                <Code2 className="h-6 w-6 text-primary-foreground" />
               </div>
               <div>
                 <h3 className="font-display text-xl font-semibold">MERN Stack Developer Intern</h3>
