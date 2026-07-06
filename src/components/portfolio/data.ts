@@ -5,7 +5,7 @@ export const PROFILE = {
   location: "Visakhapatnam, India",
   email: "sudheehoney2806@gmail.com",
   github: "https://github.com/sudheeshna86",
-  linkedin: "https://www.linkedin.com/in/sudheeshna-matta",
+  linkedin: "https://www.linkedin.com/in/sudheeshna-matta-3a60a3296/",
   leetcode: "https://leetcode.com/u/sudheeshna_08/",
   codechef: "https://www.codechef.com/users/sudheeshna_8",
   tagline:

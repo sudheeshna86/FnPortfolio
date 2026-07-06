@@ -574,7 +574,7 @@ function Projects() {
             key="major"
             initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -16 }}
             transition={{ duration: 0.35 }}
-            className="mt-12 grid gap-6 lg:grid-cols-2"
+            className="mt-12 grid gap-6 lg:grid-cols-2 items-stretch"
           >
             {major.map((p, i) => (
               <Reveal key={p.name} delay={i * 0.06}>
@@ -615,7 +615,7 @@ function ProjectVisual({ name }: { name: string }) {
   // Elegant gradient "screenshot" placeholder — themed, no external asset needed
   const initials = name.split(" ").slice(0, 2).map((w) => w[0]).join("");
   return (
-    <div className="relative h-full min-h-[180px] w-full overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-primary/30 via-accent/20 to-[oklch(0.35_0.15_240/0.4)]">
+    <div className="relative h-full min-h-[130px] w-full overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-primary/30 via-accent/20 to-[oklch(0.35_0.15_240/0.4)]">
       <div className="absolute inset-0 opacity-40 [background-image:radial-gradient(circle_at_20%_20%,oklch(1_0_0/0.25),transparent_50%),radial-gradient(circle_at_80%_60%,oklch(0.78_0.18_180/0.3),transparent_55%)]" />
       <div className="absolute inset-0 [background-image:linear-gradient(oklch(1_0_0/0.06)_1px,transparent_1px),linear-gradient(90deg,oklch(1_0_0/0.06)_1px,transparent_1px)] [background-size:32px_32px]" />
       <div className="relative flex h-full w-full items-center justify-center">
@@ -629,7 +629,7 @@ function ProjectVisual({ name }: { name: string }) {
 
 function MajorProjectCard({ project, onExpand }: { project: Project; onExpand: () => void }) {
   return (
-    <div className="group relative flex h-full flex-col overflow-hidden rounded-3xl glass-strong p-4 transition-all hover:-translate-y-1 hover:glow-ring md:p-5">
+    <div className="group relative flex h-full min-h-[18rem] flex-col overflow-hidden rounded-3xl glass-strong p-4 transition-all hover:-translate-y-1 hover:glow-ring md:p-4">
       <div className="pointer-events-none absolute -right-16 -top-16 h-64 w-64 rounded-full bg-primary/15 blur-3xl" />
       <div className="pointer-events-none absolute -bottom-20 -left-10 h-52 w-52 rounded-full bg-accent/10 blur-3xl" />
 
@@ -859,7 +859,6 @@ function CodingProfiles() {
 
 /* ---------- Resume ---------- */
 function Resume() {
-  const [open, setOpen] = useState(false);
   return (
     <>
       <Section id="resume">
@@ -877,52 +876,18 @@ function Resume() {
               </p>
             </div>
             <div className="flex flex-wrap gap-3">
-              <button
-                onClick={() => setOpen(true)}
+              <a
+                href="https://drive.google.com/file/d/1ecvUz_gZSo7a2JbrsmeEz8ox1msGq3cl/view?usp=sharing"
+                target="_blank"
+                rel="noreferrer"
                 className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-primary to-accent px-6 py-3 text-sm font-semibold text-primary-foreground transition-transform hover:scale-105"
               >
                 <FileText className="h-4 w-4" /> View resume
-              </button>
-              <a href="#contact"
-                className="inline-flex items-center gap-2 rounded-full glass px-6 py-3 text-sm font-semibold hover:bg-white/10">
-                Request full CV <ArrowRight className="h-4 w-4" />
               </a>
             </div>
           </div>
         </div>
       </Section>
-      <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent className="max-w-2xl rounded-3xl border-white/10 bg-[oklch(0.14_0.02_275/0.95)] p-0 backdrop-blur-xl">
-          <div className="relative p-6 md:p-8">
-            <div className="pointer-events-none absolute -right-16 -top-16 h-56 w-56 rounded-full bg-primary/20 blur-3xl" />
-            <div className="relative">
-              <DialogHeader>
-                <div className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground">Resume preview</div>
-                <DialogTitle className="font-display text-3xl font-semibold">Matta Sudheeshna</DialogTitle>
-                <DialogDescription className="text-sm text-muted-foreground">
-                  B.Tech CSE student focused on DSA, competitive programming, and full-stack MERN development.
-                </DialogDescription>
-              </DialogHeader>
-              <div className="mt-6 space-y-4 text-sm leading-relaxed text-foreground/90">
-                <div className="rounded-2xl bg-white/[0.03] p-4">
-                  <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground">Education</p>
-                  <p className="mt-2 font-medium">B.Tech in Computer Science and Engineering · Vignan's Institute of Information Technology</p>
-                  <p className="text-muted-foreground">GPA: 9.02/10.00 · 2023–2027</p>
-                </div>
-                <div className="rounded-2xl bg-white/[0.03] p-4">
-                  <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground">Experience</p>
-                  <p className="mt-2 font-medium">Sampath Software Solutions · Full Stack Development Intern</p>
-                  <p className="mt-1 text-muted-foreground">ModelSuite AI · MERN Stack Developer Intern</p>
-                </div>
-                <div className="rounded-2xl bg-white/[0.03] p-4">
-                  <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground">Highlights</p>
-                  <p className="mt-2 text-muted-foreground">DSA, React, Node.js, Express, MongoDB, Firebase, Cloud, and competitive programming.</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </DialogContent>
-      </Dialog>
     </>
   );
 }
@@ -950,7 +915,7 @@ function Contact() {
                     {PROFILE.email}
                   </ContactItem>
                   <ContactItem label="LinkedIn" href={PROFILE.linkedin} icon={<Linkedin className="h-4 w-4 text-accent" />}>
-                    /in/sudheeshna-matta
+                    /in/sudheeshna-matta-3a60a3296/
                   </ContactItem>
                   <ContactItem label="GitHub" href={PROFILE.github} icon={<Github className="h-4 w-4" />}>
                     @sudheeshna86
