@@ -637,19 +637,14 @@ function ProjectVisual({ name, image }: { name: string; image?: string }) {
           className="h-full w-full object-cover"
           onError={() => {
             const cur = src || "";
-            // If first attempt uses export=view, try export=download
             if (cur.includes("export=view")) {
               setSrc(cur.replace("export=view", "export=download"));
               return;
             }
-
-            // If it's a Drive URL without export param, try the download endpoint
             if (/drive.google.com/.test(cur) && driveId) {
               setSrc(`https://drive.google.com/uc?export=download&id=${driveId}`);
               return;
             }
-
-            // Give up and show placeholder
             setSrc(null);
             setFailed(true);
           }}
@@ -665,7 +660,6 @@ function ProjectVisual({ name, image }: { name: string; image?: string }) {
     );
   }
 
-  // No image available — render the themed placeholder with initials
   const initials = name.split(" ").slice(0, 2).map((w) => w[0]).join("");
   return (
     <div className="relative h-full min-h-[130px] w-full overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-primary/30 via-accent/20 to-[oklch(0.35_0.15_240/0.4)]">
@@ -678,7 +672,6 @@ function ProjectVisual({ name, image }: { name: string; image?: string }) {
       </div>
     </div>
   );
-
 }
 
 function MajorProjectCard({ project, onExpand }: { project: Project; onExpand: () => void }) {

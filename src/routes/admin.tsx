@@ -1,4 +1,4 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, useMatch, useNavigate, Outlet } from "@tanstack/react-router";
 import { useState } from "react";
 import { Lock, Eye, EyeOff } from "lucide-react";
 import { motion } from "framer-motion";
@@ -98,5 +98,14 @@ function AdminLogin() {
 }
 
 export const Route = createFileRoute("/admin")({
-  component: AdminLogin,
+  component: () => {
+    const exactAdminMatch = useMatch({ from: "/admin", strict: true, shouldThrow: false });
+
+    return (
+      <>
+        <Outlet />
+        {exactAdminMatch && <AdminLogin />}
+      </>
+    );
+  },
 });
