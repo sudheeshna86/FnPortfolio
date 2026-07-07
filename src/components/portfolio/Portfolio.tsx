@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, useMemo } from "react";
+import { useEffect, useRef, useState, useMemo, createContext, useContext } from "react";
 import { motion, useScroll, useTransform, useMotionValue, useSpring, AnimatePresence } from "framer-motion";
 import {
   Github, Linkedin, Mail, MapPin, ExternalLink, ArrowRight, ArrowUpRight,
@@ -7,8 +7,11 @@ import {
 } from "lucide-react";
 import portraitImg from "@/assets/portrait.jpg";
 import {
-  PROFILE, SKILLS, TIMELINE, PROJECTS, ACHIEVEMENTS, CERTIFICATIONS, CODING_PROFILES,
+  PROFILE, SKILLS, TIMELINE, PROJECTS, ACHIEVEMENTS, CERTIFICATIONS, CODING_PROFILES, DEFAULT_DATA,
 } from "./data";
+
+// Dynamic data from backend — component state will override these defaults
+const API_BASE = (import.meta.env.VITE_API_BASE_URL || '').replace(/\/\/$/, '') || 'http://localhost:5000';
 
 /* ---------- Cursor Glow ---------- */
 function CursorGlow() {
@@ -33,6 +36,40 @@ function CursorGlow() {
     />
   );
 }
+
+// --- fetch and provide dynamic portfolio data ---
+function usePortfolioData() {
+  const [profile, setProfile] = useState(DEFAULT_DATA.profile);
+  const [skills, setSkills] = useState(DEFAULT_DATA.skills);
+  const [timeline, setTimeline] = useState(DEFAULT_DATA.timeline);
+  const [projects, setProjects] = useState(DEFAULT_DATA.projects);
+  const [achievements, setAchievements] = useState(DEFAULT_DATA.achievements);
+  const [certifications, setCertifications] = useState(DEFAULT_DATA.certifications);
+  const [codingProfiles, setCodingProfiles] = useState(DEFAULT_DATA.codingProfiles);
+
+  useEffect(() => {
+    let mounted = true;
+    fetch(`${API_BASE}/api/portfolio`)
+      .then((r) => r.ok ? r.json() : Promise.reject(new Error('fetch failed')))
+      .then((data) => {
+        if (!mounted || !data) return;
+        if (data.profile) setProfile(data.profile);
+        if (Array.isArray(data.skills)) setSkills(data.skills);
+        if (Array.isArray(data.timeline)) setTimeline(data.timeline);
+        if (Array.isArray(data.projects)) setProjects(data.projects);
+        if (Array.isArray(data.achievements)) setAchievements(data.achievements);
+        if (Array.isArray(data.certifications)) setCertifications(data.certifications);
+        if (Array.isArray(data.codingProfiles)) setCodingProfiles(data.codingProfiles);
+      })
+      .catch(() => { /* keep defaults on error */ });
+    return () => { mounted = false; };
+  }, []);
+
+  return { profile, skills, timeline, projects, achievements, certifications, codingProfiles };
+}
+
+const PortfolioDataContext = createContext(DEFAULT_DATA);
+function usePortfolioContext() { return useContext(PortfolioDataContext); }
 
 /* ---------- Particle field ---------- */
 function Particles() {
@@ -152,6 +189,7 @@ function Reveal({ children, delay = 0 }: { children: React.ReactNode; delay?: nu
 
 /* ---------- Hero ---------- */
 function Hero() {
+  const { profile } = usePortfolioContext();
   const ref = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] });
   const y = useTransform(scrollYProgress, [0, 1], [0, 200]);
@@ -207,13 +245,13 @@ function Hero() {
             initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1 }}
             className="mt-10 flex flex-wrap items-center gap-6 text-xs uppercase tracking-[0.2em] text-muted-foreground"
           >
-            <a href={PROFILE.github} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 hover:text-foreground">
+              <a href={profile.github} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 hover:text-foreground">
               <Github className="h-4 w-4" /> GitHub
             </a>
-            <a href={PROFILE.linkedin} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 hover:text-foreground">
+            <a href={profile.linkedin} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 hover:text-foreground">
               <Linkedin className="h-4 w-4" /> LinkedIn
             </a>
-            <a href={PROFILE.leetcode} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 hover:text-foreground">
+            <a href={profile.leetcode} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 hover:text-foreground">
               <Code2 className="h-4 w-4" /> LeetCode
             </a>
           </motion.div>
@@ -238,7 +276,7 @@ function Hero() {
           >
             <img
               src={portraitImg}
-              alt={`${PROFILE.name} — portrait`}
+              alt={`${profile.name} — portrait`}
               width={896} height={1152}
               className="w-full rounded-[1.5rem] object-cover"
             />
@@ -314,6 +352,7 @@ function MagneticButton({ href, primary, children }: { href: string; primary?: b
 
 /* ---------- Intro Hologram ---------- */
 function IntroHologram() {
+  const { profile } = usePortfolioContext();
   const [open, setOpen] = useState(true);
   const [step, setStep] = useState(0);
   const lines = [
@@ -335,7 +374,7 @@ function IntroHologram() {
     >
       <div className="relative">
         <div className="h-8 w-8 overflow-hidden rounded-full ring-2 ring-primary/50">
-          <img src={portraitImg} alt="" className="h-full w-full object-cover" />
+          <img src={portraitImg} alt={profile.name} className="h-full w-full object-cover" />
         </div>
         <span className="absolute -bottom-0.5 -right-0.5 h-2.5 w-2.5 rounded-full bg-[oklch(0.78_0.18_180)] ring-2 ring-background animate-pulse-glow" />
       </div>
@@ -388,6 +427,7 @@ function About() {
 
 /* ---------- Timeline ---------- */
 function Timeline() {
+  const { timeline } = usePortfolioContext();
   return (
     <Section id="journey">
       <Reveal>
@@ -397,8 +437,8 @@ function Timeline() {
       <div className="relative mt-16">
         <div className="absolute left-4 top-0 h-full w-px bg-gradient-to-b from-primary/60 via-accent/40 to-transparent md:left-1/2" />
         <div className="space-y-12">
-          {TIMELINE.map((t, i) => (
-            <Reveal key={t.year} delay={i * 0.08}>
+          {timeline.map((t, i) => (
+            <Reveal key={`${t.year}-${i}`} delay={i * 0.08}>
               <div className={`relative flex flex-col gap-6 md:flex-row ${i % 2 ? "md:flex-row-reverse" : ""}`}>
                 <div className="md:w-1/2 md:px-10">
                   <div className="rounded-3xl glass p-6 transition-transform hover:-translate-y-1">
@@ -425,6 +465,7 @@ function Timeline() {
 
 /* ---------- Skills ---------- */
 function Skills() {
+  const { skills } = usePortfolioContext();
   const icons = { Frontend: Code2, Backend: Braces, Database: Database, "AI / ML": Brain, "Cloud & DevOps": Cloud, "Core CS": Cpu } as const;
   return (
     <Section id="skills">
@@ -435,7 +476,7 @@ function Skills() {
         </h2>
       </Reveal>
       <div className="mt-16 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-        {SKILLS.map((group, gi) => {
+        {skills.map((group, gi) => {
           const Icon = (icons as Record<string, typeof Code2>)[group.category] ?? Code2;
           return (
             <Reveal key={group.category} delay={gi * 0.06}>
@@ -523,10 +564,11 @@ import type { Project } from "./data";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 
 function Projects() {
+  const { projects, profile } = usePortfolioContext();
   const [tab, setTab] = useState<"major" | "mini">("major");
   const [active, setActive] = useState<Project | null>(null);
-  const major = PROJECTS.filter((p) => p.major);
-  const mini = PROJECTS.filter((p) => !p.major);
+  const major = projects.filter((p) => p.major);
+  const mini = projects.filter((p) => !p.major);
 
   return (
     <Section id="projects">
@@ -536,7 +578,7 @@ function Projects() {
           <h2 className="font-display text-4xl font-semibold md:text-5xl">
             <span className="text-gradient">Projects</span>
           </h2>
-          <a href={PROFILE.github} target="_blank" rel="noreferrer"
+          <a href={profile.github} target="_blank" rel="noreferrer"
             className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground">
             All repos on GitHub <ArrowUpRight className="h-4 w-4" />
           </a>
@@ -836,6 +878,7 @@ function ModalBlock({ title, children }: { title: string; children: React.ReactN
 
 /* ---------- Achievements / Certs ---------- */
 function AchievementsCerts() {
+  const { achievements, certifications } = usePortfolioContext();
   return (
     <Section>
       <div className="grid gap-10 lg:grid-cols-2">
@@ -845,7 +888,7 @@ function AchievementsCerts() {
             <h2 className="font-display text-3xl font-semibold md:text-4xl">Highlights</h2>
           </Reveal>
           <div className="mt-8 space-y-3">
-            {ACHIEVEMENTS.map((a, i) => (
+            {achievements.map((a, i) => (
               <Reveal key={a} delay={i * 0.05}>
                 <div className="flex items-start gap-4 rounded-2xl glass p-4">
                   <div className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-primary/20">
@@ -863,7 +906,7 @@ function AchievementsCerts() {
             <h2 className="font-display text-3xl font-semibold md:text-4xl">Continuous learning</h2>
           </Reveal>
           <div className="mt-8 grid gap-3 sm:grid-cols-2">
-            {CERTIFICATIONS.map((c, i) => (
+            {certifications.map((c, i) => (
               <Reveal key={c.name} delay={i * 0.05}>
                 <div className="h-full rounded-2xl glass p-4">
                   <Award className="h-5 w-5 text-accent" />
@@ -881,6 +924,7 @@ function AchievementsCerts() {
 
 /* ---------- Coding profiles ---------- */
 function CodingProfiles() {
+  const { codingProfiles } = usePortfolioContext();
   return (
     <Section id="profiles">
       <Reveal>
@@ -888,7 +932,7 @@ function CodingProfiles() {
         <h2 className="font-display text-4xl font-semibold md:text-5xl">Where I <span className="text-gradient">grind</span></h2>
       </Reveal>
       <div className="mt-14 grid gap-5 md:grid-cols-4">
-        {CODING_PROFILES.map((p, i) => (
+        {codingProfiles.map((p, i) => (
           <Reveal key={p.name} delay={i * 0.06}>
             <a href={p.href} target="_blank" rel="noreferrer"
               className="group block overflow-hidden rounded-3xl glass p-6 transition-all hover:-translate-y-1 hover:glow-ring">
@@ -943,6 +987,7 @@ function Resume() {
 
 /* ---------- Contact ---------- */
 function Contact() {
+  const { profile } = usePortfolioContext();
   return (
     <Section id="contact">
       <Reveal>
@@ -960,13 +1005,13 @@ function Contact() {
             <div className="grid gap-6 rounded-[2.75rem] bg-[rgba(255,255,255,0.02)] p-6 lg:grid-cols-[minmax(18rem,1fr)_minmax(28rem,1.4fr)]">
               <div className="rounded-[2rem] border border-white/10 bg-white/5 p-6">
                 <div className="grid gap-4 text-sm">
-                  <ContactItem label="Email" href={`mailto:${PROFILE.email}`} icon={<Mail className="h-4 w-4 text-primary" />}>
-                    {PROFILE.email}
+                  <ContactItem label="Email" href={`mailto:${profile.email}`} icon={<Mail className="h-4 w-4 text-primary" />}>
+                    {profile.email}
                   </ContactItem>
-                  <ContactItem label="LinkedIn" href={PROFILE.linkedin} icon={<Linkedin className="h-4 w-4 text-accent" />}>
+                  <ContactItem label="LinkedIn" href={profile.linkedin} icon={<Linkedin className="h-4 w-4 text-accent" />}>
                     /in/sudheeshna-matta-3a60a3296/
                   </ContactItem>
-                  <ContactItem label="GitHub" href={PROFILE.github} icon={<Github className="h-4 w-4" />}>
+                  <ContactItem label="GitHub" href={profile.github} icon={<Github className="h-4 w-4" />}>
                     @sudheeshna86
                   </ContactItem>
                   <ContactItem label="Based" icon={<MapPin className="h-4 w-4" />}>
@@ -1044,14 +1089,15 @@ function AIAssistant() {
     "Contact her",
   ];
 
+  const { profile } = usePortfolioContext();
   const answer = (q: string) => {
     const l = q.toLowerCase();
-    if (l.includes("about") || l.includes("who")) return `${PROFILE.name} is a Full Stack MERN developer and aspiring AI/ML engineer based in ${PROFILE.location}. She's currently pursuing B.Tech in CS.`;
+    if (l.includes("about") || l.includes("who")) return `${profile.name} is a Full Stack MERN developer and aspiring AI/ML engineer based in ${profile.location}. She's currently pursuing B.Tech in CS.`;
     if (l.includes("ai") || l.includes("ml")) return "AI projects: Neural Notes (RAG), AI Resume Reviewer. She works with Python, TensorFlow, PyTorch, and LLMs.";
     if (l.includes("backend")) return "Backend work spans Node.js, Express, MongoDB, PostgreSQL, Redis — check MERN Commerce and Realtime Chat.";
     if (l.includes("tech") || l.includes("stack") || l.includes("skill")) return "Core stack: React, Next.js, TypeScript, Node, MongoDB, Python, TensorFlow, AWS, Docker.";
     if (l.includes("resume")) return "Scroll to the Resume section, or click 'Download resume' — a PDF will be available soon.";
-    if (l.includes("contact") || l.includes("reach") || l.includes("email")) return `Email ${PROFILE.email} or use the contact form below. Also on GitHub & LinkedIn.`;
+    if (l.includes("contact") || l.includes("reach") || l.includes("email")) return `Email ${profile.email} or use the contact form below. Also on GitHub & LinkedIn.`;
     if (l.includes("project")) return "Featured: Neural Notes, MERN Commerce, DSA Visualizer. See the Projects section for details.";
     return "Try asking about her projects, tech stack, AI work, or how to contact her.";
   };
@@ -1137,23 +1183,26 @@ function Field({ label, children, className = "" }: { label: string; children: R
 
 /* ---------- Root ---------- */
 export function Portfolio() {
+  const data = usePortfolioData();
   return (
-    <div className="relative bg-background text-foreground overflow-x-hidden">
-      <CursorGlow />
-      <Nav />
-      <main className="w-full">
-        <Hero />
-        <About />
-        <Timeline />
-        <Skills />
-        <Experience />
-        <Projects />
-        <AchievementsCerts />
-        <CodingProfiles />
-        <Resume />
-        <Contact />
-      </main>
-      <AIAssistant />
-    </div>
+    <PortfolioDataContext.Provider value={data}>
+      <div className="relative bg-background text-foreground overflow-x-hidden">
+        <CursorGlow />
+        <Nav />
+        <main className="w-full">
+          <Hero />
+          <About />
+          <Timeline />
+          <Skills />
+          <Experience />
+          <Projects />
+          <AchievementsCerts />
+          <CodingProfiles />
+          <Resume />
+          <Contact />
+        </main>
+        <AIAssistant />
+      </div>
+    </PortfolioDataContext.Provider>
   );
 }
