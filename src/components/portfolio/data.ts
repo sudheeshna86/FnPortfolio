@@ -140,7 +140,7 @@ export const PROJECTS: Project[] = [
     href: `${GH}/Ecorecylr`,
     demo: "https://eco-flax.vercel.app/",
     major: true,
-    image: "https://drive.google.com/file/d/1o6sitz6TSLWVCOZpCzKEwD9TI1q8mu3B/view?usp=drivesdk",
+    image: "https://res.cloudinary.com/dvzk2m67a/image/upload/v1783416147/Screenshot_4812_hko5ne.png",
     overview: "Implemented Firebase Authentication for secure user login and session management. Used Firestore database for storing user records, verification logs, and reward history. Designed reward allocation and recycling validation workflows with real-time Firebase integration.",
     architecture: "React.js frontend with Firestore as the real-time database and Firebase Authentication for secure user identity management.",
     challenges: "Ensuring QR and GPS verification accuracy while maintaining low latency in real-time reward updates.",
@@ -150,7 +150,7 @@ export const PROJECTS: Project[] = [
   {
     name: "AgriConnect – Farmer Marketplace",
     tagline: "MERN-based farmer-to-buyer marketplace platform",
-    stack: ["React.js", "Node.js", "Express.js", "MongoDB", "Cloudinary"],
+    stack: ["React.js", "Node.js", "MongoDB",  "Express.js","Cloudinary"],
     problem: "Farmers needed a reliable marketplace with secure transactions and smoother communication.",
     solution: "Developed a MERN-based farmer-to-buyer marketplace platform for Farmers, Buyers, and Ad-mins with secure transactions and operational workflows.",
     features: [
@@ -164,8 +164,8 @@ export const PROJECTS: Project[] = [
     href: `${GH}/FarmerFrontend`,
     demo: "https://farmer-frontend-theta.vercel.app",
     major: true,
-    image: "https://drive.google.com/file/d/19setcmANX2sYrg4W_QH3LUfp0iGsT_7M/view?usp=drivesdk",
-    overview: "Designed role-based access control (RBAC) and JWT authentication for secure user authorization. Built REST APIs using Node.js and Express.js to manage crop listings, orders, and buyer-farmer interactions. Integrated Cloudinary for media storage, Razorpay for payments, invoice generation, and order tracking.",
+    image: "https://res.cloudinary.com/dvzk2m67a/image/upload/v1783416144/Screenshot_4811_j8wdsl.png",
+    overview: "Designed role-based access control (RBAC) and JWT authentication for secure user authorization. Built REST APIs using Node.js and Express.js to manage crop listings, orders, buyer-farmer interactions. Integrated Cloudinary for media storage, Razorpay for payments, invoice generation, and order tracking.",
     architecture: "React.js frontend, Express.js REST API, MongoDB database, Cloudinary for media storage, and Razorpay payment integration.",
     challenges: "Handling multi-role marketplace workflows with secure permissions, media uploads, and reliable transaction processing.",
     learned: "How to design role-based systems and build marketplace workflows that scale reliably with secure user authorization.",
@@ -174,7 +174,7 @@ export const PROJECTS: Project[] = [
   {
     name: "Personal Financial Manager",
     tagline: "Full-stack finance application for tracking income and expenses",
-    stack: ["React.js", "Node.js", "Express.js", "PostgreSQL", "Sequelize ORM"],
+    stack: ["React.js", "Node.js", "PostgreSQL",  "Express.js","Sequelize ORM"],
     problem: "Users needed a simple and secure way to track income, expenses, and budgets.",
     solution: "Built a full-stack personal finance management application for tracking income and expenses with secure authentication and protected routes.",
     features: [

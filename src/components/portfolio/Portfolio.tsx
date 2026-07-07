@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useMemo } from "react";
 import { motion, useScroll, useTransform, useMotionValue, useSpring, AnimatePresence } from "framer-motion";
 import {
   Github, Linkedin, Mail, MapPin, ExternalLink, ArrowRight, ArrowUpRight,
@@ -617,23 +617,55 @@ function TechPill({ children }: { children: React.ReactNode }) {
 }
 
 function ProjectVisual({ name, image }: { name: string; image?: string }) {
-  if (image) {
+  const [src, setSrc] = useState<string | null>(image ?? null);
+  const [failed, setFailed] = useState(false);
+
+  const driveId = useMemo(() => {
+    if (!image) return null;
+    const m = /[?&]id=([a-zA-Z0-9_-]+)/.exec(image);
+    return m ? m[1] : null;
+  }, [image]);
+
+  const openDriveView = driveId ? `https://drive.google.com/file/d/${driveId}/view` : image;
+
+  if (src) {
     return (
       <div className="relative h-full min-h-[130px] w-full overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-primary/30 via-accent/20 to-[oklch(0.35_0.15_240/0.4)]">
         <img
-          src={image}
+          src={src}
           alt={name}
           className="h-full w-full object-cover"
-          onError={(e) => {
-            // Fallback to gradient if image fails to load
-            e.currentTarget.style.display = "none";
+          onError={() => {
+            const cur = src || "";
+            // If first attempt uses export=view, try export=download
+            if (cur.includes("export=view")) {
+              setSrc(cur.replace("export=view", "export=download"));
+              return;
+            }
+
+            // If it's a Drive URL without export param, try the download endpoint
+            if (/drive.google.com/.test(cur) && driveId) {
+              setSrc(`https://drive.google.com/uc?export=download&id=${driveId}`);
+              return;
+            }
+
+            // Give up and show placeholder
+            setSrc(null);
+            setFailed(true);
           }}
         />
+
+        {failed && (
+          <div className="absolute left-3 bottom-3 flex items-center gap-2 rounded-full bg-white/5 px-3 py-1 text-xs">
+            <a href={openDriveView} target="_blank" rel="noreferrer" className="underline">Open on Drive</a>
+            <span className="text-muted-foreground">(image unavailable)</span>
+          </div>
+        )}
       </div>
     );
   }
 
-  // Elegant gradient "screenshot" placeholder — themed, no external asset needed
+  // No image available — render the themed placeholder with initials
   const initials = name.split(" ").slice(0, 2).map((w) => w[0]).join("");
   return (
     <div className="relative h-full min-h-[130px] w-full overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-primary/30 via-accent/20 to-[oklch(0.35_0.15_240/0.4)]">
@@ -646,6 +678,7 @@ function ProjectVisual({ name, image }: { name: string; image?: string }) {
       </div>
     </div>
   );
+
 }
 
 function MajorProjectCard({ project, onExpand }: { project: Project; onExpand: () => void }) {
