@@ -16,55 +16,55 @@ export const SKILLS: { category: string; items: { name: string; level: number }[
   {
     category: "Frontend",
     items: [
-      { name: "React", level: 95 },
-      { name: "Next.js", level: 85 },
-      { name: "TypeScript", level: 85 },
-      { name: "Tailwind CSS", level: 92 },
-      { name: "Framer Motion", level: 78 },
+      { name: "React", level: 100 },
+      { name: "Next.js", level: 100 },
+      { name: "TypeScript", level: 100 },
+      { name: "Tailwind CSS", level: 100 },
+      { name: "Framer Motion", level: 100 },
     ],
   },
   {
     category: "Backend",
     items: [
-      { name: "Node.js", level: 92 },
-      { name: "Express", level: 90 },
-      { name: "REST APIs", level: 90 },
-      { name: "JWT / Auth", level: 85 },
+      { name: "Node.js", level: 100 },
+      { name: "Express", level: 100 },
+      { name: "REST APIs", level: 100 },
+      { name: "JWT / Auth", level: 100 },
     ],
   },
   {
     category: "Database",
     items: [
-      { name: "MongoDB", level: 90 },
-      { name: "PostgreSQL", level: 78 },
-      { name: "Mongoose", level: 88 },
+      { name: "MongoDB", level: 100 },
+      { name: "PostgreSQL", level: 100 },
+      { name: "Mongoose", level: 100 },
     ],
   },
   {
     category: "AI / ML",
     items: [
-      { name: "Python", level: 88 },
-      { name: "TensorFlow", level: 70 },
-      { name: "PyTorch", level: 65 },
-      { name: "LLM / RAG", level: 72 },
+      { name: "Python", level: 100 },
+      { name: "TensorFlow", level: 100 },
+      { name: "PyTorch", level: 100 },
+      { name: "LLM / RAG", level: 100 },
     ],
   },
   {
     category: "Cloud & DevOps",
     items: [
-      { name: "AWS", level: 68 },
-      { name: "Docker", level: 72 },
-      { name: "Vercel", level: 90 },
-      { name: "Git / CI", level: 88 },
+      { name: "AWS", level: 100 },
+      { name: "Docker", level: 100 },
+      { name: "Vercel", level: 100 },
+      { name: "Git / CI", level: 100 },
     ],
   },
   {
     category: "Core CS",
     items: [
-      { name: "DSA", level: 90 },
-      { name: "OOP", level: 88 },
-      { name: "DBMS", level: 85 },
-      { name: "OS / Networks", level: 78 },
+      { name: "DSA", level: 100 },
+      { name: "OOP", level: 100 },
+      { name: "DBMS", level: 100 },
+      { name: "OS / Networks", level: 100 },
     ],
   },
 ];
@@ -77,6 +77,13 @@ export const TIMELINE = [
     description: "Shipping full-stack MERN products and exploring AI-driven features across side projects.",
     tag: "Now",
   },
+   {
+    year: "2026",
+    title: "MERN Stack Developer Intern",
+    subtitle: "ModelSuite AI",
+    description: "Worked on React, Node.js, Express, and MongoDB features while debugging issues and improving UI consistency.",
+    tag: "Internship",
+  },
   {
     year: "2025",
     title: "Full Stack Development Intern",
@@ -84,13 +91,7 @@ export const TIMELINE = [
     description: "Built production-ready MERN features, secured REST APIs, and improved database performance in an Agile workflow.",
     tag: "Internship",
   },
-  {
-    year: "2025",
-    title: "MERN Stack Developer Intern",
-    subtitle: "ModelSuite AI",
-    description: "Worked on React, Node.js, Express, and MongoDB features while debugging issues and improving UI consistency.",
-    tag: "Internship",
-  },
+ 
   {
     year: "2023",
     title: "B.Tech in Computer Science & Engineering",
@@ -117,6 +118,8 @@ export type Project = {
   challenges?: string;
   learned?: string;
   future?: string;
+  image?: string;
+  screenshots?: string[];
 };
 
 export const PROJECTS: Project[] = [
@@ -137,6 +140,7 @@ export const PROJECTS: Project[] = [
     href: `${GH}/Ecorecylr`,
     demo: "https://eco-flax.vercel.app/",
     major: true,
+    image: "https://images.unsplash.com/photo-1633356122544-f134324ef6db?w=1200&h=800&fit=crop&q=80",
     overview: "Implemented Firebase Authentication for secure user login and session management. Used Firestore database for storing user records, verification logs, and reward history. Designed reward allocation and recycling validation workflows with real-time Firebase integration.",
     architecture: "React.js frontend with Firestore as the real-time database and Firebase Authentication for secure user identity management.",
     challenges: "Ensuring QR and GPS verification accuracy while maintaining low latency in real-time reward updates.",
@@ -160,6 +164,7 @@ export const PROJECTS: Project[] = [
     href: `${GH}/FarmerFrontend`,
     demo: "https://farmer-frontend-theta.vercel.app",
     major: true,
+    image: "https://images.unsplash.com/photo-1555421689-491d97ff9766?w=1200&h=800&fit=crop&q=80",
     overview: "Designed role-based access control (RBAC) and JWT authentication for secure user authorization. Built REST APIs using Node.js and Express.js to manage crop listings, orders, and buyer-farmer interactions. Integrated Cloudinary for media storage, Razorpay for payments, invoice generation, and order tracking.",
     architecture: "React.js frontend, Express.js REST API, MongoDB database, Cloudinary for media storage, and Razorpay payment integration.",
     challenges: "Handling multi-role marketplace workflows with secure permissions, media uploads, and reliable transaction processing.",
@@ -182,6 +187,7 @@ export const PROJECTS: Project[] = [
     ],
     href: `${GH}/pfm`,
     major: true,
+    image: "https://images.unsplash.com/photo-1579621970563-430f63602022?w=1200&h=800&fit=crop&q=80",
     overview: "Developed secure authentication and protected routes using JWT-based authorization. Designed budget tracking, expense categorization, and financial reporting features. Used PostgreSQL with Sequelize ORM for efficient database management and query handling.",
     architecture: "React.js frontend, Express.js REST API, PostgreSQL database with Sequelize ORM, and JWT-based authentication for secure access.",
     challenges: "Designing an intuitive finance tracking workflow while ensuring data integrity and secure user sessions.",
@@ -204,6 +210,7 @@ export const PROJECTS: Project[] = [
     ],
     href: `${GH}/sikkim`,
     major: false,
+    image: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1200&h=800&fit=crop&q=80",
     overview: "A travel micro-site that treats Sikkim as a hero product — cinematic hero, editorial layout, and rich imagery.",
     architecture: "Pure React SPA with Tailwind and Framer Motion. Static content bundled at build time for speed.",
     challenges: "Getting high-quality visuals to load fast without hurting Lighthouse scores.",
@@ -221,6 +228,7 @@ export const PROJECTS: Project[] = [
     features: ["Partner management", "Conversion analytics", "Auth", "Responsive UI"],
     href: `${GH}/go-business-referral-dashboard`,
     major: false,
+    image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=600&h=400&fit=crop&q=80",
     overview: "An internal-tooling style dashboard for tracking referral partners and conversions.",
   },
   {
@@ -232,6 +240,7 @@ export const PROJECTS: Project[] = [
     features: ["Role auth", "Rating CRUD", "Search & filter", "Dashboard"],
     href: `${GH}/StoreRatingMng`,
     major: false,
+    image: "https://images.unsplash.com/photo-1552664730-d307ca884978?w=600&h=400&fit=crop&q=80",
     overview: "A three-role review platform (admin / owner / customer) with a clean permissions model.",
   },
   {
@@ -243,6 +252,7 @@ export const PROJECTS: Project[] = [
     features: ["Workout logs", "Progress charts", "Responsive"],
     href: `${GH}/fitness`,
     major: false,
+    image: "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=600&h=400&fit=crop&q=80",
     overview: "A typed workout logger designed for daily use and quick entry.",
   },
   {
@@ -254,6 +264,7 @@ export const PROJECTS: Project[] = [
     features: ["Kanban board", "JWT auth", "REST API", "Filters"],
     href: `${GH}/TaskManagement`,
     major: false,
+    image: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=600&h=400&fit=crop&q=80",
     overview: "A MERN Kanban with drag-and-drop, filters, and role-aware boards.",
   },
   {
@@ -265,6 +276,7 @@ export const PROJECTS: Project[] = [
     features: ["Profiles", "Matching engine", "Auth", "REST API"],
     href: `${GH}/MatchesFrontend`,
     major: false,
+    image: "https://images.unsplash.com/photo-1552664730-d307ca884978?w=600&h=400&fit=crop&q=80",
     overview: "A configurable matching platform with profile scoring and preferences.",
   },
   {
@@ -276,6 +288,7 @@ export const PROJECTS: Project[] = [
     features: ["Listings", "Categories", "Responsive UI"],
     href: `${GH}/Helphive`,
     major: false,
+    image: "https://images.unsplash.com/photo-1552664730-d307ca884978?w=600&h=400&fit=crop&q=80",
     overview: "A community marketplace for finding and offering local help.",
   },
   {
@@ -287,6 +300,7 @@ export const PROJECTS: Project[] = [
     features: ["Goals", "Progress", "Insights"],
     href: `${GH}/savvy-saver`,
     major: false,
+    image: "https://images.unsplash.com/photo-1579621970563-430f63602022?w=600&h=400&fit=crop&q=80",
     overview: "A goal-first savings tracker with clean progress visualizations.",
   },
   {
@@ -298,6 +312,7 @@ export const PROJECTS: Project[] = [
     features: ["Stock CRUD", "Dashboard", "Low-stock alerts", "Auth"],
     href: `${GH}/inventorymanagement`,
     major: false,
+    image: "https://images.unsplash.com/photo-1553531889-e6cf89870f18?w=600&h=400&fit=crop&q=80",
     overview: "A lightweight inventory tool for small businesses with alert thresholds.",
   },
 ];

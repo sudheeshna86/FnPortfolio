@@ -90,7 +90,7 @@ function RootShell({ children }: { children: ReactNode }) {
   return (
     <html lang="en" className="dark">
       <head><HeadContent /></head>
-      <body className="dark bg-background text-foreground noise">
+      <body className="dark bg-background text-foreground noise overflow-x-hidden w-screen">
         {children}
         <Scripts />
       </body>

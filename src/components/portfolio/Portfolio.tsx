@@ -105,10 +105,15 @@ function Nav() {
             </a>
           ))}
         </nav>
-        <a href="#contact"
-          className="group hidden md:inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-primary to-accent px-4 py-2 text-xs font-semibold text-primary-foreground transition-transform hover:scale-105">
-          Let's talk <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
-        </a>
+        <div className="flex items-center gap-2">
+          <a href="/admin" className="hidden md:inline-flex items-center gap-2 rounded-full glass px-4 py-2 text-xs font-semibold text-muted-foreground hover:text-foreground hover:bg-white/10 transition-colors">
+            Admin
+          </a>
+          <a href="#contact"
+            className="group hidden md:inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-primary to-accent px-4 py-2 text-xs font-semibold text-primary-foreground transition-transform hover:scale-105">
+            Let's talk <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
+          </a>
+        </div>
       </div>
     </motion.header>
   );
@@ -611,7 +616,23 @@ function TechPill({ children }: { children: React.ReactNode }) {
   );
 }
 
-function ProjectVisual({ name }: { name: string }) {
+function ProjectVisual({ name, image }: { name: string; image?: string }) {
+  if (image) {
+    return (
+      <div className="relative h-full min-h-[130px] w-full overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-primary/30 via-accent/20 to-[oklch(0.35_0.15_240/0.4)]">
+        <img
+          src={image}
+          alt={name}
+          className="h-full w-full object-cover"
+          onError={(e) => {
+            // Fallback to gradient if image fails to load
+            e.currentTarget.style.display = "none";
+          }}
+        />
+      </div>
+    );
+  }
+
   // Elegant gradient "screenshot" placeholder — themed, no external asset needed
   const initials = name.split(" ").slice(0, 2).map((w) => w[0]).join("");
   return (
@@ -635,38 +656,38 @@ function MajorProjectCard({ project, onExpand }: { project: Project; onExpand: (
 
       <div className="relative grid gap-4 md:grid-cols-5">
         {/* Left content */}
-        <div className="md:col-span-3">
+        <div className="md:col-span-3 min-w-0">
           <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground">Major Project</p>
-          <h3 className="mt-1.5 font-display text-xl font-semibold leading-tight md:text-[1.45rem]">{project.name}</h3>
-          <p className="mt-1.5 text-sm text-muted-foreground">{project.tagline}</p>
+          <h3 className="mt-1.5 font-display text-lg md:text-[1.45rem] font-semibold leading-tight break-words">{project.name}</h3>
+          <p className="mt-1.5 text-xs md:text-sm text-muted-foreground line-clamp-2">{project.tagline}</p>
 
           <div className="mt-3 rounded-2xl bg-white/[0.03] p-3">
             <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground">Problem solved</p>
-            <p className="mt-1 text-sm leading-relaxed">{project.problem}</p>
+            <p className="mt-1 text-xs md:text-sm leading-relaxed line-clamp-3">{project.problem}</p>
           </div>
 
           <div className="mt-3 flex flex-wrap gap-1.5">
-            {project.stack.map((s) => <TechPill key={s}>{s}</TechPill>)}
+            {project.stack.slice(0, 3).map((s) => <TechPill key={s}>{s}</TechPill>)}
           </div>
         </div>
 
         {/* Right visual + buttons */}
         <div className="flex flex-col gap-3 md:col-span-2">
-          <ProjectVisual name={project.name} />
-          <div className="mt-auto flex flex-wrap gap-2">
+          <ProjectVisual name={project.name} image={project.image} />
+          <div className="mt-auto flex flex-wrap gap-1.5 w-full">
             {project.demo && (
               <a href={project.demo} target="_blank" rel="noreferrer"
-                className="inline-flex flex-1 items-center justify-center gap-1.5 rounded-full bg-gradient-to-r from-primary to-accent px-3 py-2 text-xs font-semibold text-primary-foreground transition-transform hover:scale-[1.02]">
-                <ExternalLink className="h-3.5 w-3.5" /> Live
+                className="inline-flex flex-1 min-w-fit items-center justify-center gap-1 rounded-full bg-gradient-to-r from-primary to-accent px-2.5 py-2 text-xs font-semibold text-primary-foreground transition-transform hover:scale-[1.02]">
+                <ExternalLink className="h-3 w-3" /> Live
               </a>
             )}
             <a href={project.href} target="_blank" rel="noreferrer"
-              className="inline-flex flex-1 items-center justify-center gap-1.5 rounded-full glass px-3 py-2 text-xs font-semibold hover:bg-white/10">
-              <Github className="h-3.5 w-3.5" /> GitHub
+              className="inline-flex flex-1 min-w-fit items-center justify-center gap-1 rounded-full glass px-2.5 py-2 text-xs font-semibold hover:bg-white/10">
+              <Github className="h-3 w-3" /> GitHub
             </a>
             <button onClick={onExpand}
-              className="inline-flex w-full items-center justify-center gap-1.5 rounded-full border border-white/10 bg-white/[0.03] px-3 py-2 text-xs font-semibold hover:bg-white/10">
-              Expand Details <ArrowUpRight className="h-3.5 w-3.5" />
+              className="inline-flex w-full items-center justify-center gap-1 rounded-full border border-white/10 bg-white/[0.03] px-2.5 py-2 text-xs font-semibold hover:bg-white/10">
+              Expand Details <ArrowUpRight className="h-3 w-3" />
             </button>
           </div>
         </div>
@@ -722,7 +743,9 @@ function ProjectModal({ project, onClose }: { project: Project | null; onClose: 
             <div className="pointer-events-none absolute -bottom-20 -left-10 h-72 w-72 rounded-full bg-accent/15 blur-3xl" />
 
             <div className="relative p-6 md:p-8">
-              <ProjectVisual name={project.name} />
+              <div className="relative h-64 w-full overflow-hidden rounded-3xl border border-white/10">
+                <ProjectVisual name={project.name} image={project.image} />
+              </div>
               <DialogHeader className="mt-6">
                 <div className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
                   {project.major ? "Major Project" : "Mini Project"}
@@ -991,10 +1014,10 @@ function Field({ label, children, className = "" }: { label: string; children: R
 /* ---------- Root ---------- */
 export function Portfolio() {
   return (
-    <div className="relative">
+    <div className="relative bg-background text-foreground overflow-x-hidden">
       <CursorGlow />
       <Nav />
-      <main>
+      <main className="w-full">
         <Hero />
         <About />
         <Timeline />

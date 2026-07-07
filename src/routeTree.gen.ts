@@ -9,38 +9,120 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as ProjectRouteImport } from './routes/project'
+import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AdminDashboardRouteImport } from './routes/admin/dashboard'
+import { Route as ApiPortfolioApiRouteImport } from './routes/api/portfolio.api'
+import { Route as ApiAdminAuthApiRouteImport } from './routes/api/admin/auth.api'
 
+const ProjectRoute = ProjectRouteImport.update({
+  id: '/project',
+  path: '/project',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminRoute = AdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminDashboardRoute = AdminDashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => AdminRoute,
+} as any)
+const ApiPortfolioApiRoute = ApiPortfolioApiRouteImport.update({
+  id: '/api/portfolio/api',
+  path: '/api/portfolio/api',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiAdminAuthApiRoute = ApiAdminAuthApiRouteImport.update({
+  id: '/api/admin/auth/api',
+  path: '/api/admin/auth/api',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/admin': typeof AdminRouteWithChildren
+  '/project': typeof ProjectRoute
+  '/admin/dashboard': typeof AdminDashboardRoute
+  '/api/portfolio/api': typeof ApiPortfolioApiRoute
+  '/api/admin/auth/api': typeof ApiAdminAuthApiRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/admin': typeof AdminRouteWithChildren
+  '/project': typeof ProjectRoute
+  '/admin/dashboard': typeof AdminDashboardRoute
+  '/api/portfolio/api': typeof ApiPortfolioApiRoute
+  '/api/admin/auth/api': typeof ApiAdminAuthApiRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/admin': typeof AdminRouteWithChildren
+  '/project': typeof ProjectRoute
+  '/admin/dashboard': typeof AdminDashboardRoute
+  '/api/portfolio/api': typeof ApiPortfolioApiRoute
+  '/api/admin/auth/api': typeof ApiAdminAuthApiRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/admin'
+    | '/project'
+    | '/admin/dashboard'
+    | '/api/portfolio/api'
+    | '/api/admin/auth/api'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/admin'
+    | '/project'
+    | '/admin/dashboard'
+    | '/api/portfolio/api'
+    | '/api/admin/auth/api'
+  id:
+    | '__root__'
+    | '/'
+    | '/admin'
+    | '/project'
+    | '/admin/dashboard'
+    | '/api/portfolio/api'
+    | '/api/admin/auth/api'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AdminRoute: typeof AdminRouteWithChildren
+  ProjectRoute: typeof ProjectRoute
+  ApiPortfolioApiRoute: typeof ApiPortfolioApiRoute
+  ApiAdminAuthApiRoute: typeof ApiAdminAuthApiRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/project': {
+      id: '/project'
+      path: '/project'
+      fullPath: '/project'
+      preLoaderRoute: typeof ProjectRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin': {
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -48,11 +130,46 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/dashboard': {
+      id: '/admin/dashboard'
+      path: '/dashboard'
+      fullPath: '/admin/dashboard'
+      preLoaderRoute: typeof AdminDashboardRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/api/portfolio/api': {
+      id: '/api/portfolio/api'
+      path: '/api/portfolio/api'
+      fullPath: '/api/portfolio/api'
+      preLoaderRoute: typeof ApiPortfolioApiRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/admin/auth/api': {
+      id: '/api/admin/auth/api'
+      path: '/api/admin/auth/api'
+      fullPath: '/api/admin/auth/api'
+      preLoaderRoute: typeof ApiAdminAuthApiRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
+interface AdminRouteChildren {
+  AdminDashboardRoute: typeof AdminDashboardRoute
+}
+
+const AdminRouteChildren: AdminRouteChildren = {
+  AdminDashboardRoute: AdminDashboardRoute,
+}
+
+const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AdminRoute: AdminRouteWithChildren,
+  ProjectRoute: ProjectRoute,
+  ApiPortfolioApiRoute: ApiPortfolioApiRoute,
+  ApiAdminAuthApiRoute: ApiAdminAuthApiRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
