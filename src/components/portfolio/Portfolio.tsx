@@ -3,7 +3,7 @@ import { motion, useScroll, useTransform, useMotionValue, useSpring, AnimatePres
 import {
   Github, Linkedin, Mail, MapPin, ExternalLink, ArrowRight, ArrowUpRight,
   Code2, Sparkles, Cpu, Database, Cloud, Braces, Brain, Send, FileText,
-  Award, GraduationCap, Trophy, Star, GitFork, X, MessageCircle,
+  Award, GraduationCap, Trophy, Star, GitFork, X, MessageCircle, Bot,
 } from "lucide-react";
 import portraitImg from "@/assets/portrait.jpg";
 import {
@@ -1027,6 +1027,104 @@ function ContactItem({ label, href, icon, children }: { label: string; href?: st
     </div>
   );
 }
+
+/* ---------- AI Assistant ---------- */
+function AIAssistant() {
+  const [open, setOpen] = useState(false);
+  const [messages, setMessages] = useState<{ role: "bot" | "user"; text: string }[]>([
+    { role: "bot", text: "Hi! Ask me about Sudheeshna's projects, skills, or how to reach her." },
+  ]);
+  const [input, setInput] = useState("");
+
+  const quickAsks = [
+    "Tell me about Sudheeshna",
+    "Show AI projects",
+    "What technologies?",
+    "Download resume",
+    "Contact her",
+  ];
+
+  const answer = (q: string) => {
+    const l = q.toLowerCase();
+    if (l.includes("about") || l.includes("who")) return `${PROFILE.name} is a Full Stack MERN developer and aspiring AI/ML engineer based in ${PROFILE.location}. She's currently pursuing B.Tech in CS.`;
+    if (l.includes("ai") || l.includes("ml")) return "AI projects: Neural Notes (RAG), AI Resume Reviewer. She works with Python, TensorFlow, PyTorch, and LLMs.";
+    if (l.includes("backend")) return "Backend work spans Node.js, Express, MongoDB, PostgreSQL, Redis — check MERN Commerce and Realtime Chat.";
+    if (l.includes("tech") || l.includes("stack") || l.includes("skill")) return "Core stack: React, Next.js, TypeScript, Node, MongoDB, Python, TensorFlow, AWS, Docker.";
+    if (l.includes("resume")) return "Scroll to the Resume section, or click 'Download resume' — a PDF will be available soon.";
+    if (l.includes("contact") || l.includes("reach") || l.includes("email")) return `Email ${PROFILE.email} or use the contact form below. Also on GitHub & LinkedIn.`;
+    if (l.includes("project")) return "Featured: Neural Notes, MERN Commerce, DSA Visualizer. See the Projects section for details.";
+    return "Try asking about her projects, tech stack, AI work, or how to contact her.";
+  };
+
+  const send = (q: string) => {
+    if (!q.trim()) return;
+    setMessages((m) => [...m, { role: "user", text: q }] );
+    setInput("");
+    setTimeout(() => setMessages((m) => [...m, { role: "bot", text: answer(q) }]), 400);
+  };
+
+  return (
+    <>
+      <motion.button
+        onClick={() => setOpen((o) => !o)}
+        whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}
+        className="fixed bottom-6 right-6 z-50 grid h-14 w-14 place-items-center rounded-full bg-gradient-to-br from-primary to-accent text-primary-foreground shadow-[0_20px_60px_-15px_oklch(0.72_0.28_305/0.8)]"
+        aria-label="AI Assistant"
+      >
+        {open ? <X className="h-5 w-5" /> : <Bot className="h-6 w-6" />}
+      </motion.button>
+      <AnimatePresence>
+        {open && (
+          <motion.div
+            initial={{ opacity: 0, y: 20, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 20, scale: 0.95 }}
+            className="fixed bottom-24 right-6 z-50 flex h-[520px] w-[92vw] max-w-sm flex-col overflow-hidden rounded-3xl glass-strong shadow-2xl"
+          >
+            <div className="flex items-center gap-3 border-b border-white/5 p-4">
+              <div className="grid h-9 w-9 place-items-center rounded-xl bg-gradient-to-br from-primary to-accent">
+                <Sparkles className="h-4 w-4 text-primary-foreground" />
+              </div>
+              <div>
+                <p className="text-sm font-semibold">Ask about Sudheeshna</p>
+                <p className="text-[11px] text-muted-foreground">AI concierge · offline demo</p>
+              </div>
+            </div>
+            <div className="flex-1 space-y-3 overflow-y-auto p-4">
+              {messages.map((m, i) => (
+                <div key={i} className={`flex ${m.role === "user" ? "justify-end" : "justify-start"}`}>
+                  <div className={`max-w-[85%] rounded-2xl px-3.5 py-2 text-sm ${m.role === "user"
+                    ? "bg-primary text-primary-foreground"
+                    : "glass"}`}>
+                    {m.text}
+                  </div>
+                </div>
+              ))}
+              <div className="flex flex-wrap gap-1.5 pt-2">
+                {quickAsks.map((q) => (
+                  <button key={q} onClick={() => send(q)}
+                    className="rounded-full glass px-2.5 py-1 text-[11px] hover:bg-white/10">
+                    {q}
+                  </button>
+                ))}
+              </div>
+            </div>
+            <form onSubmit={(e) => { e.preventDefault(); send(input); }}
+              className="flex items-center gap-2 border-t border-white/5 p-3">
+              <input value={input} onChange={(e) => setInput(e.target.value)}
+                placeholder="Ask anything..."
+                className="flex-1 rounded-full bg-white/5 px-4 py-2 text-sm outline-none placeholder:text-muted-foreground focus:bg-white/10" />
+              <button type="submit" className="grid h-9 w-9 place-items-center rounded-full bg-primary text-primary-foreground">
+                <Send className="h-4 w-4" />
+              </button>
+            </form>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </>
+  );
+}
+
 function Field({ label, children, className = "" }: { label: string; children: React.ReactNode; className?: string }) {
   return (
     <label className={`block ${className}`}>
@@ -1055,6 +1153,7 @@ export function Portfolio() {
         <Resume />
         <Contact />
       </main>
+      <AIAssistant />
     </div>
   );
 }

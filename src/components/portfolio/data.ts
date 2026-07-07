@@ -339,3 +339,15 @@ export const CODING_PROFILES = [
   { name: "GitHub", value: "40+", label: "public repos", href: PROFILE.github },
   { name: "LinkedIn", value: "Connect", label: "professional network", href: PROFILE.linkedin },
 ];
+
+export const PROJECT_IMAGE_FALLBACK = "https://images.unsplash.com/photo-1518770660439-4636190af475?w=1200&q=80&auto=format&fit=crop";
+
+export const DEFAULT_DATA = {
+  profile: PROFILE,
+  skills: SKILLS,
+  timeline: TIMELINE,
+  projects: PROJECTS,
+  achievements: ACHIEVEMENTS,
+  certifications: CERTIFICATIONS,
+  codingProfiles: CODING_PROFILES,
+};
